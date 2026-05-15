@@ -73,4 +73,34 @@ spock.py --basename ${WD}/profiles_new_new/${SEED}/${SEED} --output ${WD}/profil
 
 ## Running `mccoy.py`
 `mccoy.py` Uses the SSR profile and compares it against a copy of the VIVC database to assign a variety name if possible.
+It requires at least the genotype results from `spock.py` (`--genotype`), the reference database as a tsv-file (`--reference`) and an output file-basename (`--output`).
 
+Optional parameters include the number of displayed hits with `--top-n` (default 10), a mismatch tolerance specifying how much marker-reference sizes can differ from called markers (`--match-tolerance`) (default 1 bp) and the minimum number of matches required to assign a variety call (`--min-anchor-matches`) (default 3).
+
+```
+$ mccoy.py 
+usage: mccoy.py [-h] --genotype GENOTYPE --reference REFERENCE --output OUTPUT [--top-n TOP_N] [--match-tolerance MATCH_TOLERANCE] [--min-anchor-matches MIN_ANCHOR_MATCHES]
+mccoy.py: error: the following arguments are required: --genotype, --reference, --output
+[mschmidt@frankfurt ~]$ mccoy.py -h
+usage: mccoy.py [-h] --genotype GENOTYPE --reference REFERENCE --output OUTPUT [--top-n TOP_N] [--match-tolerance MATCH_TOLERANCE] [--min-anchor-matches MIN_ANCHOR_MATCHES]
+
+Match a sample SSR genotype against the VIVC reference database.
+
+options:
+  -h, --help            show this help message and exit
+  --genotype GENOTYPE   Genotype TSV produced by ssr_genotype_sample.py.
+  --reference REFERENCE
+                        VIVC SSR profiles TSV (vivc_ssr-profiles.tsv).
+  --output OUTPUT       Output basename; writes <output>.variety_match.tsv.
+  --top-n TOP_N         Number of top candidates to report (default: 10).
+  --match-tolerance MATCH_TOLERANCE
+                        +-bp tolerance when comparing alleles (default: 1).
+  --min-anchor-matches MIN_ANCHOR_MATCHES
+                        Minimum number of heterozygous anchor loci that must match (both alleles) for a candidate to be reported (default: 3).
+```
+
+A typical command looks like this
+
+```
+mccoy.py --genotype ${WD}/profiles_new_new/${SEED}/${SEED}.genotype.tsv --reference ${DATAPATH}/vivc_ssr-profiles.tsv --output ${WD}/profiles_new_new/${SEED}/${SEED}
+```
